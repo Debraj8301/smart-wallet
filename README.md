@@ -9,10 +9,10 @@ Smart Wallet AI is a next-generation expense tracking application that goes beyo
 ## 📸 Screenshots
 
 ### Mobile App Interface
-| Home Dashboard | Budget Monitoring | AI Insights |
-|:---:|:---:|:---:|
-| <img src="assets/home.png" width="200" /> | <img src="assets/budget.png" width="200" /> | <img src="assets/insights.png" width="200" /> |
-| *Overview of spending & recent transactions* | *Real-time tracking vs limits* | *Psychological analysis of spending* |
+| Home Dashboard | Budget Monitoring | AI Insights | Analytics |
+|:---:|:---:|:---:|:---:|
+| <img src="assets/home.png" width="200" /> | <img src="assets/budget.png" width="200" /> | <img src="assets/insights.png" width="200" /> | <img src="assets/chart.png" width="200" /> |
+| *Overview of spending* | *Real-time tracking* | *Psychological analysis* | *Visual spending breakdown* |
 
 ### Onboarding & Profile
 | Sign In | Sign Up | Profile |

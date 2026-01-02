@@ -155,4 +155,4 @@ npx expo start
 
 ---
 
-**Developed with ❤️ by [Your Name/Team]**
+**Developed with ❤️ by [Debraj Goswami]**

@@ -22,9 +22,9 @@ def clean_details(details):
     if not details:
         return ""
     s = str(details)
-    s = re.sub(r"^(Paid\\s*to|Paidto|Received\\s*from|Receivedfrom)\\s*", "", s, flags=re.IGNORECASE)
-    s = re.sub(r"^[-–—]+\\s*", "", s)
-    s = re.sub(r"\\s+", " ", s).strip()
+    s = re.sub(r"^(Paid\s*to|Paidto|Received\s*from|Receivedfrom)\s*", "", s, flags=re.IGNORECASE)
+    s = re.sub(r"^[-–—]+\s*", "", s)
+    s = re.sub(r"\s+", " ", s).strip()
     return s
 
 def normalize_type(t, details):

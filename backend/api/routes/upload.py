@@ -3,8 +3,8 @@ import os
 import shutil
 import uuid
 
-from pdf_processor import extract_statement_data
-from helper import to_records, insert_supabase, normalize_statement_type
+from services.pdf_processor import extract_statement_data
+from utils.helpers import to_records, insert_supabase, normalize_statement_type
 from core.config import TABLE_NAME, get_supabase_client
 from core.deps import get_current_user
 

@@ -1,6 +1,6 @@
 from typing import Dict, Any
 import logging
-from ai_agent import run_agent, run_insights_agent
+from services.ai_service import run_agent, run_insights_agent
 
 JOBS: Dict[str, Dict[str, Any]] = {}
 

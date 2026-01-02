@@ -200,50 +200,7 @@ def call_gemini(prompt: str, response_mime_type: str = "application/json") -> An
     
     return getattr(resp, "text", "")
 
-def generate_roast_message(category: str, spent: float, limit: float, user_details: dict = None) -> str:
-    """
-    Generates a witty, sarcastic roast for exceeding the budget.
-    """
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if not api_key:
-        return "You've exceeded your budget. Try to spend less next time!"
 
-    try:
-        client = Client(api_key=api_key)
-        # Switching to stable model to avoid RESOURCE_EXHAUSTED errors on experimental models
-        model_name = "gemini-2.5-flash-lite" 
-    except Exception as e:
-        logging.error(f"Failed to initialize Gemini client for roast: {e}")
-        return "You've exceeded your budget. Try to spend less next time!"
-
-    name_context = ""
-    if user_details:
-        if user_details.get("name"):
-            name_context += f"The user's name is {user_details.get('name')}."
-        if user_details.get("age"):
-            name_context += f" The user is {user_details.get('age')} years old."
-    
-    prompt = f"""
-    You are a witty, sarcastic, and slightly mean financial advisor. 
-    {name_context}
-    The user has exceeded their budget for the category '{category}'. 
-    They spent ₹{spent:.2f} but their limit was ₹{limit:.2f}. 
-    
-    Write a short, personalized, quirky, and roasting message (max 2-3 sentences) scolding them for this financial irresponsibility. 
-    Use their name if provided.
-    Use Indian currency symbol (₹). Make it memorable, funny, and stinging but not offensive.
-    """
-
-    try:
-        resp = client.models.generate_content(
-            model=model_name,
-            contents=prompt
-        )
-        return getattr(resp, "text", "").strip()
-    except Exception as e:
-        logging.error(f"Gemini API call failed for roast: {e}")
-        return "You've exceeded your budget. Serious financial discipline is required!"
-    return getattr(resp, "text", "")
 
 def tag_with_gemini(state: State) -> State:
     txs = state["transactions"]
@@ -557,14 +514,19 @@ def run_agent(supabase_client: Any, batch_size: int = 100, threshold: float = 0.
         "categories": []
     }
     final = app.invoke(init)
-    res_all = final["results"] or []
-    path = final["path"]
     
-    flagged = [r for r in res_all if r.get("requires_human_verification")]
-    persist_results(supabase_client, res_all, user_id, user_email)
+    results = final.get("results", [])
+    persist_results(supabase_client, results, user_id, user_email)
+    
+    # We don't run insights automatically in run_agent anymore, use run_insights_agent separately
+    # Or should we? The graph definition above had generate_insights removed from edges?
+    # Wait, in the code above:
+    # g.add_edge("behavioral_analysis", END)
+    # g.add_edge("mark_needs_verification", END)
+    # So generate_insights is NOT called in run_agent graph.
+    
     return {
-        "count": len(flagged),
-        "path": path,
-        "flagged_count": len(flagged),
-        "results": flagged
+        "processed": len(results),
+        "results": results,
+        "path": final.get("path")
     }

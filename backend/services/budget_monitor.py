@@ -5,7 +5,7 @@ from services.email_service import send_budget_alert
 import logging
 
 def check_budget_and_notify(user_id: str, user_email: str, category_name: str):
-    from ai_agent import generate_roast_message
+    from services.ai_roast import generate_roast_message
     """
     Checks if the user's spending for the given category in the current month
     exceeds the set budget. If so, sends an email alert.

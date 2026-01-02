@@ -7,7 +7,7 @@ from core.config import get_supabase_client
 from core.deps import get_current_user
 from core.ratelimit import RateLimiter
 from services.jobs import JOBS, run_agent_job, run_insights_job
-from ai_agent import run_agent
+from services.ai_service import run_agent, run_insights_agent
 from fastapi import Depends
 
 router = APIRouter(prefix="/ai")

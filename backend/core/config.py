@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 import httpx
-from helper import create_supabase_client
+from utils.helpers import create_supabase_client
 import redis.asyncio as redis
 
 load_dotenv()

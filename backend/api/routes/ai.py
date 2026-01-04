@@ -43,7 +43,7 @@ async def ai_generate_insights(
 async def ai_test_gemini(prompt: str = "Say hello from Gemini", model: str = "gemini-2.5-flash-lite"):
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
-        raise HTTPException(status_code=500, detail="GEMINI_API_KEY not set")
+        return {"ok": False, "error": "GEMINI_API_KEY not set", "response_text": "", "model": model, "prompt": prompt}
     try:
         client = Client(api_key=api_key)
         model_name = model
@@ -56,19 +56,19 @@ async def ai_test_gemini(prompt: str = "Say hello from Gemini", model: str = "ge
             "response_text": text
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Gemini error: {e}")
+        return {"ok": False, "error": f"Gemini error: {e}", "response_text": "", "model": model, "prompt": prompt}
 
 @router.get("/list-models")
 async def list_models():
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
-        raise HTTPException(status_code=500, detail="GEMINI_API_KEY not set")
+        return {"ok": False, "error": "GEMINI_API_KEY not set", "models": []}
     client = Client(api_key=api_key)
     try:
         models = [getattr(m, "name", "") for m in client.models.list()]
-        return {"models": models}
+        return {"ok": True, "models": models}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Gemini list models error: {e}")
+        return {"ok": False, "error": f"Gemini list models error: {e}", "models": []}
 
 @router.post("/run-agent-async")
 async def ai_run_agent_async(

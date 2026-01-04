@@ -7,9 +7,12 @@ import { replace } from '../navigation/NavigationService';
 // For physical device, use your machine's local IP address (e.g., http://192.168.1.24:8000)
 // Current detected IP: 192.168.1.24
 const DEV_URL = 'http://192.168.1.24:8000';
+// Use EXPO_PUBLIC_API_URL when available (Render or any hosted backend)
+const PROD_URL = process.env.EXPO_PUBLIC_API_URL;
+const BASE_URL = PROD_URL || DEV_URL;
 
 const client = axios.create({
-  baseURL: DEV_URL,
+  baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },

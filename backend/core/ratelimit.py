@@ -22,17 +22,18 @@ class RateLimiter:
         # Redis logic: increment counter, set expiry if new
         # Using a sliding window or fixed window. Fixed window is simpler.
         
-        current = await redis.get(key)
-        
-        if current and int(current) >= self.times:
-            ttl = await redis.ttl(key)
-            raise HTTPException(
-                status_code=429, 
-                detail=f"Too many requests. Try again in {ttl} seconds."
-            )
-        
-        pipe = redis.pipeline()
-        pipe.incr(key, 1)
-        if not current:
-            pipe.expire(key, self.seconds)
-        await pipe.execute()
+        try:
+            current = await redis.get(key)
+            if current and int(current) >= self.times:
+                ttl = await redis.ttl(key)
+                raise HTTPException(
+                    status_code=429, 
+                    detail=f"Too many requests. Try again in {ttl} seconds."
+                )
+            pipe = redis.pipeline()
+            pipe.incr(key, 1)
+            if not current:
+                pipe.expire(key, self.seconds)
+            await pipe.execute()
+        except Exception:
+            return

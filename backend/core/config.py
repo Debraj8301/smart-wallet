@@ -8,7 +8,7 @@ load_dotenv()
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
-REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
+REDIS_URL = os.environ.get("REDIS_URL")
 
 # Email Configuration
 SMTP_SERVER = os.environ.get("SMTP_SERVER", "smtp.gmail.com")
@@ -34,6 +34,8 @@ def get_redis_client():
     global redis_client
     if redis_client:
         return redis_client
+    if not REDIS_URL:
+        return None
     redis_client = redis.from_url(REDIS_URL, encoding="utf-8", decode_responses=True)
     return redis_client
 
@@ -54,12 +56,13 @@ async def startup_initialize():
         raise RuntimeError("Failed to create Supabase client.")
 
     # Initialize Redis
-    try:
-        get_redis_client()
-        await redis_client.ping()
-        print("Redis connection established.")
-    except Exception as e:
-        print(f"Warning: Redis connection failed: {e}. Rate limiting may not work.")
+    if REDIS_URL:
+        try:
+            get_redis_client()
+            await redis_client.ping()
+            print("Redis connection established.")
+        except Exception as e:
+            print(f"Warning: Redis connection failed: {e}. Rate limiting may not work.")
 
     try:
         async with httpx.AsyncClient(timeout=5) as client:

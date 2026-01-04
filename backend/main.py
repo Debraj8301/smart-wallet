@@ -27,6 +27,10 @@ os.makedirs("uploads", exist_ok=True)
 async def root():
     return {"message": "Welcome to the Smart Wallet API"}
 
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
 app.include_router(upload_router)
 app.include_router(ai_router)
 app.include_router(transactions_router)
